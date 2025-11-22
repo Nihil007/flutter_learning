@@ -12,7 +12,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _emailCtrl = TextEditingController();
+  final _identifierCtrl = TextEditingController(); // email or mobile
   final _passCtrl = TextEditingController();
   bool _loading = false;
   String? _error;
@@ -23,18 +23,20 @@ class _LoginPageState extends State<LoginPage> {
       _error = null;
     });
 
-    final email = _emailCtrl.text.trim();
+    final identifier = _identifierCtrl.text.trim(); // email OR mobile
     final pass = _passCtrl.text;
 
-    if (email.isEmpty || pass.isEmpty) {
+    if (identifier.isEmpty || pass.isEmpty) {
       setState(() {
         _loading = false;
-        _error = 'Please enter email and password';
+        _error = 'Please enter email/mobile and password';
       });
       return;
     }
 
-    final resp = await ApiService.login(email, pass);
+    // backend accepts "identifier"
+    final resp = await ApiService.login(identifier, pass);
+
     setState(() {
       _loading = false;
     });
@@ -54,7 +56,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _forgotPassword() {
-    // Dummy for now
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Forgot password pressed — dummy for now.')),
     );
@@ -62,8 +63,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Use narrower max width for mobile-like screens,
-    // allow slightly wider on web by checking kIsWeb or screen width.
     final screenWidth = MediaQuery.of(context).size.width;
     final maxWidth = kIsWeb ? (screenWidth > 900 ? 540.0 : 420.0) : 420.0;
 
@@ -77,16 +76,21 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 8),
             Text('Welcome back', style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 16),
+
+            // IDENTIFIER FIELD
             TextField(
-              controller: _emailCtrl,
-              keyboardType: TextInputType.emailAddress,
+              controller: _identifierCtrl,
+              keyboardType: TextInputType.text,
               decoration: const InputDecoration(
-                labelText: 'Email',
+                labelText: 'Email or Mobile',
                 border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.email),
+                prefixIcon: Icon(Icons.person),
               ),
             ),
+
             const SizedBox(height: 12),
+
+            // PASSWORD
             TextField(
               controller: _passCtrl,
               obscureText: true,
@@ -96,30 +100,40 @@ class _LoginPageState extends State<LoginPage> {
                 prefixIcon: Icon(Icons.lock),
               ),
             ),
+
             const SizedBox(height: 12),
+
             if (_error != null) ...[
               Text(_error!, style: const TextStyle(color: Colors.red)),
               const SizedBox(height: 8),
             ],
+
             SizedBox(
               width: double.infinity,
               child: _loading
-                  ? const Center(child: Padding(
+                  ? const Padding(
                       padding: EdgeInsets.symmetric(vertical: 12),
-                      child: CircularProgressIndicator(),
-                    ))
+                      child: Center(child: CircularProgressIndicator()),
+                    )
                   : ElevatedButton(
                       onPressed: _login,
-                      style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 14)),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
                       child: const Text('Login'),
                     ),
             ),
+
             const SizedBox(height: 8),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
-                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RegisterPage())),
+                  onPressed: () {
+                    Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const RegisterPage()));
+                  },
                   child: const Text('Sign up'),
                 ),
                 TextButton(
@@ -128,10 +142,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ],
             ),
-            // const SizedBox(height: 6),
-            // // Helpful small hint
-            // Text('Running on: ${kIsWeb ? "Web (localhost)" : "Android emulator (10.0.2.2)"}',
-            //     style: Theme.of(context).textTheme.bodySmall),
           ],
         ),
       ),

@@ -14,15 +14,14 @@ class ApiService {
   }
 
   // REGISTER
-  static Future<Map<String, dynamic>> register(String name, String email, String password) async {
+  static Future<Map<String, dynamic>> register(String name, String email, String mobile, String password) async {
     final res = await http.post(
       Uri.parse('$baseUrl/auth/register'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'name': name, 'email': email, 'password': password}),
+      body: jsonEncode({'name': name, 'email': email, 'mobile': mobile, 'password': password}),
     );
     final body = res.body.isNotEmpty ? jsonDecode(res.body) : {};
-    if (res.statusCode == 200 || res.statusCode == 201) {
-      // store token + user
+    if (res.statusCode == 201 || res.statusCode == 200) {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', body['token']);
       await prefs.setString('user', jsonEncode(body['user']));
@@ -33,11 +32,11 @@ class ApiService {
   }
 
   // LOGIN
-  static Future<Map<String, dynamic>> login(String email, String password) async {
+  static Future<Map<String, dynamic>> login(String identifier, String password) async {
     final res = await http.post(
       Uri.parse('$baseUrl/auth/login'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'email': email, 'password': password}),
+      body: jsonEncode({'identifier': identifier, 'password': password}),
     );
     final body = res.body.isNotEmpty ? jsonDecode(res.body) : {};
     if (res.statusCode == 200) {

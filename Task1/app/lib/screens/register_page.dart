@@ -12,6 +12,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _nameCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
+  final _mobileCtrl = TextEditingController();
   bool _loading = false;
   String? _error;
   String? _success;
@@ -25,9 +26,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
     final name = _nameCtrl.text.trim();
     final email = _emailCtrl.text.trim();
+    final mobile = _mobileCtrl.text.trim();
     final pass = _passCtrl.text;
 
-    if (name.isEmpty || email.isEmpty || pass.isEmpty) {
+    if (name.isEmpty || email.isEmpty || mobile.isEmpty || pass.isEmpty) {
       setState(() {
         _loading = false;
         _error = 'Please fill all fields';
@@ -43,7 +45,7 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
-    final resp = await ApiService.register(name, email, pass);
+    final resp = await ApiService.register(name, email, mobile, pass);
     setState(() {
       _loading = false;
     });
@@ -81,6 +83,8 @@ class _RegisterPageState extends State<RegisterPage> {
             TextField(controller: _emailCtrl, keyboardType: TextInputType.emailAddress, decoration: const InputDecoration(labelText: 'Email', border: OutlineInputBorder(), prefixIcon: Icon(Icons.email))),
             const SizedBox(height: 12),
             TextField(controller: _passCtrl, obscureText: true, decoration: const InputDecoration(labelText: 'Password', border: OutlineInputBorder(), prefixIcon: Icon(Icons.lock))),
+            const SizedBox(height: 12),
+            TextField(controller: _mobileCtrl, keyboardType: TextInputType.phone,  decoration: InputDecoration(labelText: 'Mobile', border: OutlineInputBorder(), prefixIcon: Icon(Icons.phone))),
             const SizedBox(height: 12),
             if (_error != null) ...[
               Text(_error!, style: const TextStyle(color: Colors.red)),
