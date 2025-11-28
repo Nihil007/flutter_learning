@@ -7,7 +7,7 @@ const bcrypt = require('bcryptjs');
 const twilio = require('twilio');
 const rateLimit = require('express-rate-limit');
 
-const User = require('./user'); // adjust path if your structure differs
+const User = require('./user'); 
 
 // Config from env
 const ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID || '';
@@ -143,7 +143,7 @@ router.post('/reset-with-token', async (req, res) => {
     user.resetPasswordOtpExpires = undefined;
     await user.save();
 
-    // optional confirmation SMS
+    // confirmation SMS
     try {
       if (SEND_SMS && twilioClient) {
         const to = user.mobile.startsWith('+') ? user.mobile : `+91${user.mobile}`;

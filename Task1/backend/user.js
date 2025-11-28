@@ -1,4 +1,4 @@
-// models/User.js  (replace /mnt/data/user.js)
+// models/User.js
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema(

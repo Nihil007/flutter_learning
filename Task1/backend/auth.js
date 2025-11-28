@@ -61,10 +61,6 @@ router.post("/register", async (req, res) => {
 });
 
 // LOGIN
-// Body accepts either:
-// { "identifier": "<email or mobile>", "password": "..." }
-// OR { "email": "...", "password": "..." }
-// OR { "mobile": "...", "password": "..." }
 router.post("/login", async (req, res) => {
   try {
     const { identifier, email, mobile, password } = req.body;
