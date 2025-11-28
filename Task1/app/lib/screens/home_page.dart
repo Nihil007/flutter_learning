@@ -1,6 +1,9 @@
+// lib/screens/home_page.dart
+import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'login_page.dart';
 import '../services/api_service.dart';
+import 'login_page.dart';
 
 class HomePage extends StatefulWidget {
   final String userName;
@@ -11,12 +14,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String _name = '';
+  // Example users list (you can replace with real data)
+  final List<Map<String, String>> _users = [
+    {'name': 'Shadha'},
+    {'name': 'Bala'},
+    {'name': 'Pikachu'},
+  ];
 
-  @override
-  void initState() {
-    super.initState();
-    _name = widget.userName;
+  // Local uploaded image path (the file you provided)
+  // The system saved this file for you at this path:
+  final String _localAvatarPath = '/mnt/data/Your paragraph text.png';
+
+  // If running on the web, FileImage won't work; use a fallback network/asset image:
+  ImageProvider _avatarProvider() {
+    if (!kIsWeb && File(_localAvatarPath).existsSync()) {
+      return FileImage(File(_localAvatarPath));
+    }
+    // fallback - a simple network avatar; change to your asset if you prefer
+    return const NetworkImage('https://imgs.search.brave.com/QqdZUU85ynVfLUt2xRC6EjrJlrMP-ZEB2HXiC6rB7u4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzL2U1L2Q3/L2I4L2U1ZDdiODI4/NDAwNjEwM2E1MGY0/NmE3MTZkMTBjY2Jh/LmpwZw');
   }
 
   void _logout() async {
@@ -30,29 +45,67 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Small centered layout for Home page so title is centered on wide screens too
+    // large header height and large font sizes to match the screenshot
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Hello $_name'),
-        actions: [
-          IconButton(onPressed: _logout, icon: const Icon(Icons.logout)),
-        ],
-      ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 700),
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Hello $_name', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 18),
-                const Text('Welcome to the app — everything is centered and responsive now.', textAlign: TextAlign.center),
-              ],
+      body: Column(
+        children: [
+          // Top header
+          Container(
+            width: double.infinity,
+            color: const Color(0xFFE6BFF0), // soft purple like screenshot
+            padding: const EdgeInsets.only(left: 18, top: 42, bottom: 12),
+            // top padding accounts for status bar; adjust if needed
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Welcome ${widget.userName}',
+                style: const TextStyle(
+                  fontSize: 30, // large font like screenshot
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
             ),
           ),
-        ),
+
+          // The list of users -- expanded to fill remaining space
+          Expanded(
+            child: ListView.separated(
+              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+              itemCount: _users.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              itemBuilder: (context, index) {
+                final user = _users[index];
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // avatar
+                    CircleAvatar(
+                      radius: 25, // circle 
+                      backgroundImage: _avatarProvider(),
+                      backgroundColor: Colors.grey[100],
+                    ),
+                    const SizedBox(width: 18),
+                    // user name text
+                    Text(
+                      user['name'] ?? '',
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+
+      // optional floating logout button or AppBar action
+      floatingActionButton: FloatingActionButton(
+        onPressed: _logout,
+        child: const Icon(Icons.logout),
+        tooltip: 'Logout',
       ),
     );
   }

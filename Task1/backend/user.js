@@ -7,8 +7,8 @@ const UserSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true, sparse: true },
     mobile: { type: String, required: true, unique: true, sparse: true },
     password: { type: String, required: true },
-    resetPasswordToken: { type: String },
-    resetPasswordExpires: { type: Date }
+    resetPasswordOtp: { type: String },
+    resetPasswordOtpExpires: { type: Date } 
   },
   { timestamps: true, collection: 'user' }
 );

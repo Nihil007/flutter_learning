@@ -5,6 +5,7 @@ const cors = require('cors');
 
 const authRoutes = require('./auth');
 
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -22,3 +23,6 @@ mongoose
   .catch((err) => {
     console.error('MongoDB connection error:', err);
   });
+
+  const passwordSmsRoutes = require('./password_sms');
+  app.use('/api/password', passwordSmsRoutes);

@@ -4,6 +4,7 @@ import '../services/api_service.dart';
 import 'register_page.dart';
 import 'home_page.dart';
 import '../widgets/centered_card.dart';
+import 'forgot_and_verify_page.dart'; // <- new import
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -56,8 +57,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _forgotPassword() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Forgot password pressed — dummy for now.')),
+    // Navigate to the combined "send OTP + verify OTP" page
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ForgotAndVerifyPage()),
     );
   }
 
