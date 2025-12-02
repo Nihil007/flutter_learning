@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   static String get baseUrl {
-    if (kIsWeb) return 'http://localhost:4000/api';
-    return 'http://10.0.2.2:4000/api';
+    if (kIsWeb) return 'http://192.168.29.49:4000/api';
+    return 'http://192.168.29.49:4000/api';
     // For physical device: return 'http://192.168.x.y:4000/api';
   }
 

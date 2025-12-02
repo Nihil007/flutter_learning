@@ -26,3 +26,9 @@ mongoose
 
   const passwordSmsRoutes = require('./password_sms');
   app.use('/api/password', passwordSmsRoutes);
+
+  app.get('/ping', (req, res) => {
+  console.log('Ping hit!');
+  res.send('pong');
+  });
+

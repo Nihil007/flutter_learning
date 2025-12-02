@@ -10,10 +10,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Login',
+      title: 'Chatting App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.indigo),
       home: const LoginPage(),
-    );
+    ); 
   }
 }
